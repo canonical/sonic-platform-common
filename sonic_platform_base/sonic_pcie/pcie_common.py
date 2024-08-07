@@ -37,8 +37,6 @@ class PcieUtil(PcieBase):
     def get_pcie_device(self):
         pciDict = {}
         pciList = []
-        p1 = "^(\w+):(\w+)\.(\w)\s(.*)\s*\(*.*\)*"
-        p2 = "^.*:.*:.*:(\w+)\s*\(*.*\)*"
         command1 = ["sudo", "lspci"]
         command2 = ["sudo", "lspci", "-n"]
         # run command 1
@@ -61,8 +59,8 @@ class PcieUtil(PcieBase):
         else:
             for (line1, line2) in zip(output1, output2):
                 pciDict.clear()
-                match1 = re.search(p1, line1.strip())
-                match2 = re.search(p2, line2.strip())
+                match1 = re.search(r"^(\w+):(\w+)\.(\w)\s(.*)\s*\(*.*\)*", line1.strip())
+                match2 = re.search(r"^.*:.*:.*:(\w+)\s*\(*.*\)*", line2.strip())
                 if match1 and match2:
                     Bus = match1.group(1)
                     Dev = match1.group(2)
